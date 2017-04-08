@@ -1,0 +1,62 @@
+<?php
+
+/**
+ * PageListExtras
+ *
+ * @author Robin Sallis
+ * @credits Based on PageListShowPageId by Philipp Urlich "Soma"
+ *
+ * ProcessWire 3.x
+ * Copyright (C) 2011 by Ryan Cramer
+ * Licensed under GNU/GPL v2, see LICENSE.TXT
+ *
+ * http://www.processwire.com
+ * http://www.ryancramer.com
+ *
+ */
+
+class PageListExtras extends WireData implements Module {
+
+	/**
+	 * Module information
+	 */
+	public static function getModuleInfo() {
+		return array(
+			'title' => 'Page List Extras',
+			'version' => 1,
+			'summary' => 'Adds page ID and template name to the page list, for superuser only.',
+			'autoload' => "template=admin",
+		);
+	}
+
+	/**
+	 * Ready
+	 */
+	public function ready() {
+		if($this->user->isSuperuser()){
+			$this->addHookAfter('ProcessPageListRender::getPageLabel', $this, 'addExtras');
+			$this->addHookAfter('ProcessPageList::execute', $this, 'addStylesheet');
+		}
+	}
+
+	/**
+	 * Add extras
+	 */
+	public function addExtras($event){
+		$page = $event->arguments('page');
+		$options = $event->arguments('options');
+		if(!empty($options['noTags'])) return; // return if this label is for the Tree dropdown menus
+		$event->return .= " <span class='helper-info'>($page->id, $page->template)</span> ";
+	}
+
+	/**
+	 * Add stylesheet
+	 */
+	public function addStylesheet($event){
+		$info = $this->getModuleInfo();
+		$version = (int) $info['version'];
+		$config = $this->config;
+		$config->styles->add($config->urls->{$this->className} . "{$this->className}.css?v=$version");
+	}
+
+}
