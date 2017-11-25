@@ -23,7 +23,7 @@ class PageListExtras extends WireData implements Module {
 	public static function getModuleInfo() {
 		return array(
 			'title' => 'Page List Extras',
-			'version' => 1,
+			'version' => 2,
 			'summary' => 'Adds page ID and template name to the page list, for superuser only.',
 			'autoload' => "template=admin",
 		);
@@ -35,7 +35,8 @@ class PageListExtras extends WireData implements Module {
 	public function ready() {
 		if($this->user->isSuperuser()){
 			$this->addHookAfter('ProcessPageListRender::getPageLabel', $this, 'addExtras');
-			$this->addHookAfter('ProcessPageList::execute', $this, 'addStylesheet');
+			// Add styles to all processes, so they are available for InputfieldPageListSelect
+			$this->addHookAfter('ProcessController::execute', $this, 'addStylesheet');
 		}
 	}
 

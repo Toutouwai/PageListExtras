@@ -2,4 +2,4 @@
 body .PageListItem > a span + span::before { content:'' }
 
 /* Style helper info added to Page List by customised PageListShowPageID module */
-body .PageListItem > a .helper-info { font-size:0.8em; color:#222222; }
+body .PageListRoot .helper-info { font-size:0.8em; color:#222222; }
