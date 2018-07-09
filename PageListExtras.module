@@ -55,7 +55,7 @@ class PageListExtras extends WireData implements Module {
 	 */
 	public function addStylesheet($event){
 		$info = $this->getModuleInfo();
-		$version = (int) $info['version'];
+		$version = $info['version'];
 		$config = $this->config;
 		$config->styles->add($config->urls->{$this->className} . "{$this->className}.css?v=$version");
 	}
