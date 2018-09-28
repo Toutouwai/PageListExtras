@@ -1,4 +1,4 @@
-<?php
+<?php namespace ProcessWire;
 
 /**
  * PageListExtras
@@ -23,8 +23,9 @@ class PageListExtras extends WireData implements Module {
 	public static function getModuleInfo() {
 		return array(
 			'title' => 'Page List Extras',
-			'version' => 2,
+			'version' => '0.1.3',
 			'summary' => 'Adds page ID and template name to the page list, for superuser only.',
+			'author' => 'Robin Sallis',
 			'autoload' => "template=admin",
 		);
 	}
@@ -35,7 +36,6 @@ class PageListExtras extends WireData implements Module {
 	public function ready() {
 		if($this->user->isSuperuser()){
 			$this->addHookAfter('ProcessPageListRender::getPageLabel', $this, 'addExtras');
-			// Add styles to all processes, so they are available for InputfieldPageListSelect
 			$this->addHookAfter('ProcessController::execute', $this, 'addStylesheet');
 		}
 	}
@@ -46,7 +46,8 @@ class PageListExtras extends WireData implements Module {
 	public function addExtras($event){
 		$page = $event->arguments('page');
 		$options = $event->arguments('options');
-		if(!empty($options['noTags'])) return; // return if this label is for the Tree dropdown menus
+		// Return if this label is for the Tree dropdown menus
+		if(!empty($options['noTags'])) return;
 		$event->return .= " <span class='helper-info'>($page->id, $page->template)</span> ";
 	}
 
@@ -56,7 +57,7 @@ class PageListExtras extends WireData implements Module {
 	public function addStylesheet($event){
 		$info = $this->getModuleInfo();
 		$version = $info['version'];
-		$config = $this->config;
+		$config = $this->wire()->config;
 		$config->styles->add($config->urls->{$this->className} . "{$this->className}.css?v=$version");
 	}
 
