@@ -1,20 +1,5 @@
 <?php namespace ProcessWire;
 
-/**
- * PageListExtras
- *
- * @author Robin Sallis
- * @credits Based on PageListShowPageId by Philipp Urlich "Soma"
- *
- * ProcessWire 3.x
- * Copyright (C) 2011 by Ryan Cramer
- * Licensed under GNU/GPL v2, see LICENSE.TXT
- *
- * http://www.processwire.com
- * http://www.ryancramer.com
- *
- */
-
 class PageListExtras extends WireData implements Module {
 
 	/**
@@ -23,7 +8,7 @@ class PageListExtras extends WireData implements Module {
 	public static function getModuleInfo() {
 		return array(
 			'title' => 'Page List Extras',
-			'version' => '0.1.4',
+			'version' => '0.1.5',
 			'summary' => 'Adds page ID and template name to the page list, for superuser only.',
 			'author' => 'Robin Sallis',
 			'href' => 'https://github.com/Toutouwai/PageListExtras',
@@ -53,6 +38,8 @@ class PageListExtras extends WireData implements Module {
 		$options = $event->arguments(1);
 		// Return if this label is for the Tree dropdown menus
 		if(!empty($options['noTags'])) return;
+		// Return if this label is for a Page List Select
+		if($this->wire()->input->get('mode') === 'select') return;
 		$event->return .= " <span class='helper-info'>($page->id, $page->template)</span> ";
 	}
 
